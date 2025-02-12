@@ -1,3 +1,8 @@
+//! See [`derive2`]. For examples, see the
+//! [github repo](https://github.com/mysteriouslyseeing/derive2).
+//!
+//! [`derive2`]: macro@derive2
+
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use syn::{
@@ -6,6 +11,9 @@ use syn::{
 };
 
 /// Takes the struct, enum, or union it is applied to, and calls every macro provided on it.
+///
+/// This lets you use [`macro_rules!`](https://doc.rust-lang.org/rust-by-example/macros.html) macros
+/// as derive macros, for example.
 ///
 /// # Usage
 ///
@@ -119,7 +127,8 @@ impl Parse for Derive2Args {
     }
 }
 
-/// Only retains attributes which do not match the final path segment of any of the paths in matches
+/// Only retains attributes which do not start with the final path segment of any of the paths in
+/// matches
 fn retain_unrecognised_attrs(attrs: &mut Vec<Attribute>, matches: &[Path]) {
     attrs.retain(|attr| {
         if let Some(ident) = attr.meta.path().segments.first().map(|s| &s.ident) {
